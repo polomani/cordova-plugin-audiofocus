@@ -18,6 +18,11 @@ public class AudioFocus extends CordovaPlugin {
             return true;
         }
 
+        if (action.equals("abandonFocus")) {
+            this.abandonFocus(callbackContext);
+            return true;
+        }
+
         return false;
     }
 
@@ -31,6 +36,23 @@ public class AudioFocus extends CordovaPlugin {
         int result = am.requestAudioFocus(null,
                                         AudioManager.STREAM_MUSIC,
                                         AudioManager.AUDIOFOCUS_GAIN);
+
+        // return result
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            callbackContext.success("");
+        } else {
+            callbackContext.error("");
+        }
+    }
+
+    private void abandonFocus(CallbackContext callbackContext) {
+        // get AudioManager
+        AudioManager am = (AudioManager)this.cordova.getActivity()
+                                    .getApplicationContext()
+                                    .getSystemService(Context.AUDIO_SERVICE);
+
+        // abandon audio focus
+        int result = am.abandonAudioFocus(null);
 
         // return result
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
